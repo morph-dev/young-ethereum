@@ -24,6 +24,17 @@ struct BlockProof {
     proofs: Vec<AccountProof>,
 }
 
+impl BlockProof {
+    fn new(block: &BlockInfo, proofs: Vec<AccountProof>) -> Self {
+        Self {
+            block: block.number(),
+            block_hash: block.hash(),
+            state_root: block.state_root(),
+            proofs,
+        }
+    }
+}
+
 fn write_to_file<T: Serialize>(args: &Args, t: T, filename: String) -> Result<()> {
     create_dir_all(&args.output_directory)?;
 
@@ -32,21 +43,6 @@ fn write_to_file<T: Serialize>(args: &Args, t: T, filename: String) -> Result<()
 
     let file = File::create(path)?;
     serde_json::to_writer_pretty(BufWriter::new(file), &t).map_err(Error::from)
-}
-
-fn write_block_proof_to_file(
-    args: &Args,
-    block: &BlockInfo,
-    proofs: Vec<AccountProof>,
-    filename: String,
-) -> Result<()> {
-    let block_proof = BlockProof {
-        block: block.number(),
-        block_hash: block.hash(),
-        state_root: block.state_root(),
-        proofs,
-    };
-    write_to_file(args, block_proof, filename)
 }
 
 fn update_tree_nodes(tree_nodes: &mut BTreeMap<B256, Bytes>, proofs: &Vec<AccountProof>) {
@@ -67,7 +63,7 @@ pub async fn export_block_proofs(args: &Args) -> Result<()> {
     let mut state = State::try_new(&args)?;
 
     let mut all_tree_nodes: BTreeMap<B256, Bytes> = BTreeMap::new();
-    update_tree_nodes(&mut all_tree_nodes, &state.get_proofs(&state.accounts)?);
+    let mut partial_block_proofs: Vec<BlockProof> = vec![];
 
     for block_number in 0..=args.blocks {
         println!("Processing block: {}", block_number);
@@ -79,15 +75,15 @@ pub async fn export_block_proofs(args: &Args) -> Result<()> {
 
         // Updated accounts
 
-        let updated_account_proofs = state.get_proofs(&updated_accounts)?;
+        let updated_account_proofs = state.get_proofs(if block_number == 0 {
+            &state.accounts
+        } else {
+            &updated_accounts
+        })?;
         update_tree_nodes(&mut all_tree_nodes, &updated_account_proofs);
 
-        write_block_proof_to_file(
-            &args,
-            &block,
-            updated_account_proofs,
-            format!("proofs.partial.block.{}.json", block_number),
-        )?;
+        let block_proof = BlockProof::new(&block, updated_account_proofs);
+        partial_block_proofs.push(block_proof);
 
         // All accounts
 
@@ -102,10 +98,9 @@ pub async fn export_block_proofs(args: &Args) -> Result<()> {
                 format!("tree.block.{}.json", block_number),
             )?;
 
-            write_block_proof_to_file(
+            write_to_file(
                 &args,
-                &block,
-                all_account_proofs,
+                &BlockProof::new(&block, all_account_proofs),
                 format!("proofs.full.block.{}.json", block_number),
             )?;
         }
@@ -113,8 +108,14 @@ pub async fn export_block_proofs(args: &Args) -> Result<()> {
 
     write_to_file(
         &args,
+        partial_block_proofs,
+        format!("archive.proofs.{}.json", args.blocks),
+    )?;
+
+    write_to_file(
+        &args,
         all_tree_nodes,
-        format!("tree.archive.{}.json", args.blocks),
+        format!("archive.tree.{}.json", args.blocks),
     )?;
 
     Ok(())

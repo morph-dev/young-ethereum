@@ -2,24 +2,29 @@
 
 Lightweight tool for analyzing the beginning of the Ethereum blockchain, with focus on state tree.
 
+## Example usage
+
+```console
+crate run -- --blocks 10
+```
+
 ## Output
 
 All files are written to `output` directory (configurable with `--output-directory` flag).
 
 All files are in `.json` format and most field are self explanatory, but some might require explanation:
 
-- `block.X.json` - containes block headers and traces
-- `proofs.partial.block.X.json` - contains proofs for all modified accounts within a block
+- `block.X.json` - headers and traces for block `X`
+- `archive.proofs.X.json` - containes all partial block proofs, since genesis up until a block `X`
+    - Partial block proof contains proofs only for accounts modified within a block
     - Each proof is given as a list of tree nodes (RLP encoded), starting from the root
-    - **Note:** There is no proof for block 0
-- `proofs.full.block.X.json` - contains proofs for all accounts since genesis up until a block
-    - Each proof is given as a list of tree nodes (RLP encoded), starting from the root
+- `archive.tree.X.json` - All tree nodes since genesis up until a block `X`
+    - A key-value pairs, where value is RLP encoded tree node, and key is keccak256 of it
+- `proofs.full.block.X.json` - contains proofs for all accounts since genesis up until a block `X`
     - Can be disabled with `--disable-full-state-proof-per-block` flag
 - `tree.block.X.json` - Entire tree state at a given block
     - A key-value pairs, where value is RLP encoded tree node, and key is keccak256 of it
     - Can be disabled with `--disable-full-state-proof-per-block` flag
-- `tree.archive.X.json` - All tree nodes since genesis up until a block
-    - A key-value pairs, where value is RLP encoded tree node, and key is keccak256 of it
 
 ## How it works
 
@@ -35,9 +40,10 @@ This program does following:
     1. Fetches the block header and trace
         - These are saved locally in `block.X.json` and fetching will be skipped if they are present
     1. Updates the tree state
-    1. Export proofs for each modified account into `proofs.partial.block.X.json`
-        - **Note:** there will be no proof for block 0
+    1. Creates partial block proof
+        - Partial block proof contains proofs only for accounts modified in the current block
     1. If `--disable-full-state-proof-per-block` flag is not set:
         1. Exports proofs for all accounts in the state tree into `proofs.full.block.X.json`
         1. Exports entire state tree for current block into `tree.block.X.json`
-1. Exports all state trees since genesis into `tree.archive.X.json`
+1. Exports all state trees since genesis into `archive.tree.X.json`
+1. Exports all partial block proofs since genesis into `archive.proofs.X.json`
