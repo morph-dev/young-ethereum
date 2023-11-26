@@ -82,7 +82,6 @@ impl State {
         let mut updated_accounts = BTreeSet::new();
 
         for reward in block.block_rewards() {
-            println!("Updating account: {} {}", reward.address, reward.value);
             let address = &reward.address;
             let mut account = self.get_account_state(&address)?;
             account.balance += reward.value;
