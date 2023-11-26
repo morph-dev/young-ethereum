@@ -1,0 +1,60 @@
+{
+  "header": {
+    "hash": "0x6a27d325aa1f3a1639cb72b704cf80f25470139efaaf5d48ea6e318269a28f8a",
+    "parentHash": "0xd93f8129b3ed958dff542e717851243b53f2047d49147ea445af02c5e16062e7",
+    "sha3Uncles": "0xce79e1ed35eb08ba6262ebba998721bed2c6bf960282c5a5ba796891a19f69b6",
+    "miner": "0xbb7b8287f3f0a933474a79eae42cbca977791171",
+    "stateRoot": "0x18e42e4f80a76649687e71bf099f9bab0de463155fd085fd4ec7117608b8f55c",
+    "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "number": "0x7e",
+    "gasUsed": "0x0",
+    "gasLimit": "0x1388",
+    "extraData": "0x476574682f4c5649562f76312e302e302f6c696e75782f676f312e342e32",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": "0x55ba4424",
+    "difficulty": "0x4398b160a",
+    "totalDifficulty": "0x208883cbd3c",
+    "sealFields": [],
+    "uncles": [
+      "0xc8684fdf6b7a1ecfc20ca7b57905439d72eace0851691001b086fb55f72838d6"
+    ],
+    "transactions": [],
+    "size": "0x43b",
+    "mixHash": "0xb6f0e4ea1b694de4755f0405c53e136cace8a2b8763235dba7e1d6f736966a64",
+    "nonce": "0xa4dabf1919c3b4ee",
+    "baseFeePerGas": null
+  },
+  "traces": [
+    {
+      "action": {
+        "author": "0xbb7b8287f3f0a933474a79eae42cbca977791171",
+        "value": "0x478eae0e571ba000",
+        "rewardType": "block"
+      },
+      "result": null,
+      "traceAddress": [],
+      "subtraces": 0,
+      "transactionPosition": null,
+      "transactionHash": null,
+      "blockNumber": 126,
+      "blockHash": "0x6a27d325aa1f3a1639cb72b704cf80f25470139efaaf5d48ea6e318269a28f8a",
+      "type": "reward"
+    },
+    {
+      "action": {
+        "author": "0x2f85b3bf062769b2a2672200afb21e3f4067a86d",
+        "value": "0x340aad21b3b70000",
+        "rewardType": "uncle"
+      },
+      "result": null,
+      "traceAddress": [],
+      "subtraces": 0,
+      "transactionPosition": null,
+      "transactionHash": null,
+      "blockNumber": 126,
+      "blockHash": "0x6a27d325aa1f3a1639cb72b704cf80f25470139efaaf5d48ea6e318269a28f8a",
+      "type": "reward"
+    }
+  ]
+}
