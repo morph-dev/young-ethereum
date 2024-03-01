@@ -28,7 +28,7 @@ impl BlockFetcher {
 
     pub async fn get_block_info(&self, block: BlockNumber) -> Result<BlockInfo> {
         let mut path = PathBuf::from(&self.output_folder);
-        path.push(format!("block.{}.json", block));
+        path.push(format!("blocks/block.{}.json", block));
 
         if path.exists() {
             let reader = BufReader::new(File::open(path)?);

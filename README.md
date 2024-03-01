@@ -5,7 +5,7 @@ Lightweight tool for analyzing the beginning of the Ethereum blockchain, with fo
 ## Example usage
 
 ```console
-crate run -- --blocks 10
+cargo run -- --blocks 10
 ```
 
 ## Output

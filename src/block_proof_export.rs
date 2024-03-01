@@ -17,11 +17,11 @@ use crate::{
 };
 
 #[derive(Debug, Serialize, Deserialize)]
-struct BlockProof {
-    block: BlockNumber,
-    block_hash: BlockHash,
-    state_root: B256,
-    proofs: Vec<AccountProof>,
+pub struct BlockProof {
+    pub block: BlockNumber,
+    pub block_hash: BlockHash,
+    pub state_root: B256,
+    pub proofs: Vec<AccountProof>,
 }
 
 impl BlockProof {
@@ -75,21 +75,20 @@ pub async fn export_block_proofs(args: &Args) -> Result<()> {
 
         // Updated accounts
 
+        let all_account_proofs = state.get_proofs(&state.accounts)?;
+        update_tree_nodes(&mut all_tree_nodes, &all_account_proofs);
+
         let updated_account_proofs = state.get_proofs(if block_number == 0 {
             &state.accounts
         } else {
             &updated_accounts
         })?;
-        update_tree_nodes(&mut all_tree_nodes, &updated_account_proofs);
-
         let block_proof = BlockProof::new(&block, updated_account_proofs);
         partial_block_proofs.push(block_proof);
 
         // All accounts
 
         if !args.disable_full_state_proof_per_block {
-            let all_account_proofs = state.get_proofs(&state.accounts)?;
-
             let mut block_tree_nodes: BTreeMap<B256, Bytes> = BTreeMap::new();
             update_tree_nodes(&mut block_tree_nodes, &all_account_proofs);
             write_to_file(

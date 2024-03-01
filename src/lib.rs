@@ -1,8 +1,8 @@
-mod account_state;
-mod block_fetcher;
-mod block_info;
-mod block_proof_export;
-mod state;
+pub mod account_state;
+pub mod block_fetcher;
+pub mod block_info;
+pub mod block_proof_export;
+pub mod state;
 
 use anyhow::Result;
 use clap::Parser;
